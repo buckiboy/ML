@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snort Log Threat Prediction</title>
+</head>
+<body>
+    <h1>Snort Log Threat Prediction</h1>
+    
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/predict_calculation">Predict Calculation</a></li>
+            <li><a href="/model_performance">Model Performance</a></li>
+            <li><a href="/removed_data">Removed Data</a></li>
+        </ul>
+    </nav>
+
+    <h2>Prediction Form</h2>
+    <form action="/predict_form" method="POST">
+        <label for="src">Source IP:</label><br>
+        <input type="text" id="src" name="src" required><br><br>
+        <label for="sport">Source Port:</label><br>
+        <input type="number" id="sport" name="sport" required><br><br>
+        <label for="dst">Destination IP:</label><br>
+        <input type="text" id="dst" name="dst" required><br><br>
+        <label for="dport">Destination Port:</label><br>
+        <input type="number" id="dport" name="dport" required><br><br>
+        <label for="protocol">Protocol:</label><br>
+        <select id="protocol" name="protocol" required>
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
+            <option value="ICMP">ICMP</option>
+        </select><br><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if prediction is not none %}
+    <h2>Prediction Result</h2>
+    <p>Prediction: {{ 'Threat' if prediction == 1 else 'No Threat' }}</p>
+    <p>Source IP: {{ src }}</p>
+    <p>Source Port: {{ sport }}</p>
+    <p>Destination IP: {{ dst }}</p>
+    <p>Destination Port: {{ dport }}</p>
+    <p>Protocol: {{ protocol }}</p>
+    <p>Reason: {{ sig_name }}</p>
+    {% endif %}
+
+    <h2>Upload File for Prediction</h2>
+    <form action="/predict_file" method="POST" enctype="multipart/form-data">
+        <label for="file">Choose a CSV file:</label><br>
+        <input type="file" id="file" name="file" accept=".csv" required><br><br>
+        <input type="submit" value="Upload and Predict">
+    </form>
+
+    {% if prediction_results %}
+    <h2>File Prediction Results</h2>
+    <form action="/label_predictions" method="POST">
+        <table border="1">
+            <tr>
+                <th>Source IP</th>
+                <th>Source Port</th>
+                <th>Destination IP</th>
+                <th>Destination Port</th>
+                <th>Protocol</th>
+                <th>Prediction</th>
+                <th>Reason</th>
+                <th>Signature</th>
+                <th>Label</th>
+            </tr>
+            {% for result in prediction_results %}
+            <tr>
+                <td>{{ result.src }}</td>
+                <td>{{ result.sport }}</td>
+                <td>{{ result.dst }}</td>
+                <td>{{ result.dport }}</td>
+                <td>{{ result.protocol }}</td>
+                <td>{{ 'Threat' if result.prediction == 1 else 'No Threat' }}</td>
+                <td>{{ result.sig_name }}</td>
+                <td>
+                    <input type="text" name="sig_name" value="{{ result.sig_name }}">
+                </td>
+                <td>
+                    <select name="label">
+                        <option value="1" {% if result.prediction == 1 %}selected{% endif %}>Threat</option>
+                        <option value="0" {% if result.prediction == 0 %}selected{% endif %}>No Threat</option>
+                    </select>
+                </td>
+                <input type="hidden" name="src" value="{{ result.src }}">
+                <input type="hidden" name="sport" value="{{ result.sport }}">
+                <input type="hidden" name="dst" value="{{ result.dst }}">
+                <input type="hidden" name="dport" value="{{ result.dport }}">
+                <input type="hidden" name="protocol" value="{{ result.protocol }}">
+                <input type="hidden" name="prediction" value="{{ result.prediction }}">
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Submit Labels">
+    </form>
+    {% endif %}
+
+    <h2>Manually Label Data</h2>
+    <form action="/label" method="POST">
+        <label for="src">Source IP:</label><br>
+        <input type="text" id="src" name="src" required><br><br>
+        <label for="sport">Source Port:</label><br>
+        <input type="number" id="sport" name="sport" required><br><br>
+        <label for="dst">Destination IP:</label><br>
+        <input type="text" id="dst" name="dst" required><br><br>
+        <label for="dport">Destination Port:</label><br>
+        <input type="number" id="dport" name="dport" required><br><br>
+        <label for="protocol">Protocol:</label><br>
+        <select id="protocol" name="protocol" required>
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
+            <option value="ICMP">ICMP</option>
+        </select><br><br>
+        <label for="sig_name">Signature Name:</label><br>
+        <input type="text" id="sig_name" name="sig_name" required><br><br>
+        <label for="label">Label (0 for No Threat, 1 for Threat):</label><br>
+        <input type="number" id="label" name="label" min="0" max="1" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <h2>Retrain Model</h2>
+    <form action="/retrain" method="POST">
+        <input type="submit" value="Retrain Model">
+    </form>
+
+    <h2>Trained Data</h2>
+    <table border="1">
+        <tr>
+            <th>Source IP</th>
+            <th>Source Port</th>
+            <th>Destination IP</th>
+            <th>Destination Port</th>
+            <th>Protocol</th>
+            <th>Signature Name</th>
+            <th>Label</th>
+            <th>Source</th>
+            <th>Actions</th>
+        </tr>
+        {% for entry in trained_data %}
+        <tr>
+            <td>{{ entry.src }}</td>
+            <td>{{ entry.sport }}</td>
+            <td>{{ entry.dst }}</td>
+            <td>{{ entry.dport }}</td>
+            <td>{{ entry.protocol }}</td>
+            <td>{{ entry.sig_name }}</td>
+            <td>{{ entry.label }}</td>
+            <td>{{ entry.source }}</td>
+            <td>
+                <form action="/delete/{{ loop.index0 }}" method="POST" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Trained Data Graph</h2>
+    <img src="{{ url_for('trained_data_graph') }}" alt="Trained Data Graph">
+</body>
+</html>

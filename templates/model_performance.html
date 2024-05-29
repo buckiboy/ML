@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Model Performance</title>
+</head>
+<body>
+    <h1>Model Performance</h1>
+    {% if test_results %}
+        <h2>Classification Report</h2>
+        <pre>{{ test_results.classification_report }}</pre>
+        
+        <h2>Metrics</h2>
+        <ul>
+            <li>Accuracy: {{ test_results.accuracy }}</li>
+            <li>Precision: {{ test_results.precision }}</li>
+            <li>Recall: {{ test_results.recall }}</li>
+            <li>F1 Score: {{ test_results.f1_score }}</li>
+        </ul>
+        
+        <h2>Prediction Details</h2>
+        <table border="1">
+            <tr>
+                <th>Actual Label</th>
+                <th>Predicted Label</th>
+            </tr>
+            {% for detail in test_results.details %}
+            <tr>
+                <td>{{ detail.y_test }}</td>
+                <td>{{ detail.y_pred }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No test results available.</p>
+    {% endif %}
+</body>
+</html>

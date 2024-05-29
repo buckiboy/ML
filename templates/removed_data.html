@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Removed Data</title>
+</head>
+<body>
+    <h1>Removed Data</h1>
+    <table border="1">
+        <tr>
+            <th>Source IP</th>
+            <th>Source Port</th>
+            <th>Destination IP</th>
+            <th>Destination Port</th>
+            <th>Protocol</th>
+            <th>Signature Name</th>
+            <th>Label</th>
+            <th>Source</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for entry in removed_data %}
+        <tr>
+            <td>{{ entry.src }}</td>
+            <td>{{ entry.sport }}</td>
+            <td>{{ entry.dst }}</td>
+            <td>{{ entry.dport }}</td>
+            <td>{{ entry.protocol }}</td>
+            <td>{{ entry.sig_name }}</td>
+            <td>{{ entry.label }}</td>
+            <td>{{ entry.source }}</td>
+            <td>{{ entry.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

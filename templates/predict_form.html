@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snort Log Threat Prediction</title>
+</head>
+<body>
+    <h1>Snort Log Threat Prediction</h1>
+    <form action="/predict_calculation" method="POST">
+        <label for="src">Source IP:</label><br>
+        <input type="text" id="src" name="src" required><br><br>
+        <label for="sport">Source Port:</label><br>
+        <input type="number" id="sport" name="sport" required><br><br>
+        <label for="dst">Destination IP:</label><br>
+        <input type="text" id="dst" name="dst" required><br><br>
+        <label for="dport">Destination Port:</label><br>
+        <input type="number" id="dport" name="dport" required><br><br>
+        <label for="protocol">Protocol:</label><br>
+        <select id="protocol" name="protocol" required>
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
+            <option value="ICMP">ICMP</option>
+        </select><br><br>
+        <input type="submit" value="Predict">
+    </form>
+</body>
+</html>

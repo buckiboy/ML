@@ -1,0 +1,10 @@
+src,sport,dst,dport,sig_name,label,source,src_num,dst_num,protocol_TCP,protocol_UDP,protocol_ICMP,timestamp
+192.168.1.100,1025,192.168.1.200,80,Normal activity for a web server,0,file,192168001100,192168001200,True,False,0,20240527213438
+203.0.113.5,22,198.51.100.10,1025,SSH port used for outbound connection,1,file,203000113005,198051100010,True,False,0,20240527213438
+192.0.2.1,443,192.0.2.2,10443,HTTPS port used for outbound connection,1,file,192000002001,192000002002,True,False,0,20240527213438
+192.168.1.100,1025,192.168.1.200,80,Normal activity for a web server,0,file,192168001100,192168001200,True,False,0,20240527213550
+203.0.113.5,22,198.51.100.10,1025,SSH port used for outbound connection,1,file,203000113005,198051100010,True,False,0,20240527213550
+192.0.2.1,443,192.0.2.2,10443,HTTPS port used for outbound connection,1,file,192000002001,192000002002,True,False,0,20240527213550
+192.168.1.100,1025,192.168.1.200,80,Normal activity for a web server,0,file,192168001100,192168001200,True,False,0,20240527214755
+203.0.113.5,22,198.51.100.10,1025,SSH port used for outbound connection,1,file,203000113005,198051100010,True,False,0,20240527214755
+192.0.2.1,443,192.0.2.2,10443,HTTPS port used for outbound connection,1,file,192000002001,192000002002,True,False,0,20240527214755

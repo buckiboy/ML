@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+</head>
+<body>
+    <h1>Prediction Result</h1>
+    {% if error %}
+    <p>Error: {{ error }}</p>
+    {% else %}
+    <p>Prediction: {{ 'Threat' if prediction == 1 else 'No Threat' }}</p>
+    <p>Source IP: {{ src }}</p>
+    <p>Source Port: {{ sport }}</p>
+    <p>Destination IP: {{ dst }}</p>
+    <p>Destination Port: {{ dport }}</p>
+    <p>Protocol: {{ protocol }}</p>
+    <p>Reason: {{ sig_name }}</p>
+    <h2>Add this prediction to training data</h2>
+    <form action="/add_prediction" method="POST">
+        <input type="hidden" name="src" value="{{ src }}">
+        <input type="hidden" name="sport" value="{{ sport }}">
+        <input type="hidden" name="dst" value="{{ dst }}">
+        <input type="hidden" name="dport" value="{{ dport }}">
+        <input type="hidden" name="protocol" value="{{ protocol }}">
+        <label for="sig_name">Signature Name:</label>
+        <input type="text" id="sig_name" name="sig_name" value="{{ sig_name }}" required><br><br>
+        <label for="label">Is this a threat?</label>
+        <select id="label" name="label">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select><br><br>
+        <input type="submit" value="Add to Training Data">
+    </form>
+    {% endif %}
+</body>
+</html>

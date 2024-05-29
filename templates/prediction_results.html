@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Results</title>
+</head>
+<body>
+    <h1>Prediction Results</h1>
+    <form action="/label_predictions" method="POST">
+        <table border="1">
+            <tr>
+                <th>Source IP</th>
+                <th>Source Port</th>
+                <th>Destination IP</th>
+                <th>Destination Port</th>
+                <th>Protocol</th>
+                <th>Prediction</th>
+                <th>Reason</th>
+                <th>Signature</th>
+                <th>Label</th>
+            </tr>
+            {% for result in prediction_results %}
+            <tr>
+                <td>{{ result.src }}</td>
+                <td>{{ result.sport }}</td>
+                <td>{{ result.dst }}</td>
+                <td>{{ result.dport }}</td>
+                <td>{{ result.protocol }}</td>
+                <td>{{ 'Threat' if result.prediction == 1 else 'No Threat' }}</td>
+                <td>{{ result.sig_name }}</td>
+                <td>
+                    <input type="text" name="sig_name" value="{{ result.sig_name }}">
+                </td>
+                <td>
+                    <select name="label">
+                        <option value="1" {% if result.prediction == 1 %}selected{% endif %}>Threat</option>
+                        <option value="0" {% if result.prediction == 0 %}selected{% endif %}>No Threat</option>
+                    </select>
+                </td>
+                <input type="hidden" name="src" value="{{ result.src }}">
+                <input type="hidden" name="sport" value="{{ result.sport }}">
+                <input type="hidden" name="dst" value="{{ result.dst }}">
+                <input type="hidden" name="dport" value="{{ result.dport }}">
+                <input type="hidden" name="protocol" value="{{ result.protocol }}">
+                <input type="hidden" name="prediction" value="{{ result.prediction }}">
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Submit Labels">
+    </form>
+</body>
+</html>
